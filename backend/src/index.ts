@@ -1,9 +1,15 @@
-import { Hono } from 'hono'
+import { Hono } from "hono";
+import { getPrisma } from "../prisma/prismaFunctions";
 
-const app = new Hono()
+const app = new Hono<{
+  Bindings: {
+    DATABASE_URL: string;
+  };
+}>();
 
-app.get('/', (c) => {
-  return c.text('Hello Hono!')
-})
+app.get("/", async (c) => {
+  const prisma = getPrisma(c.env.DATABASE_URL);
+  return c.text("Hello Hono!");
+});
 
-export default app
+export default app;
