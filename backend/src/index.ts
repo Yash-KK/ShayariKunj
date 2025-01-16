@@ -1,14 +1,10 @@
 import { Hono } from "hono";
-import { getPrisma } from "../prisma/prismaFunctions";
+import userRouter from "./routes/user";
 
-const app = new Hono<{
-  Bindings: {
-    DATABASE_URL: string;
-  };
-}>();
+const app = new Hono();
+app.route("/api/v1/user", userRouter);
 
 app.get("/", async (c) => {
-  const prisma = getPrisma(c.env.DATABASE_URL);
   return c.text("Hello Hono!");
 });
 
