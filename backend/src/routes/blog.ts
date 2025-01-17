@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { verify } from "hono/jwt";
 import { JWTPayload } from "hono/utils/jwt/types";
 import { getPrisma } from "prisma/prismaFunctions";
+import { CreateBlogType, UpdateBlogType } from "@yashkharche/zod-module";
 
 const blogRouter = new Hono<{
   Bindings: {
@@ -13,6 +14,7 @@ const blogRouter = new Hono<{
   };
 }>();
 
+// middleware
 blogRouter.use("/*", async (c, next) => {
   const token = c.req.header("Authorization")?.split(" ")[1];
   if (!token) {
@@ -57,10 +59,14 @@ blogRouter.post("/", async (c) => {
   const userId = c.get("decoded").id;
 
   try {
-    const body = await c.req.json();
-    body.authorId = userId;
+    const body: CreateBlogType = await c.req.json();
     const blog = await prisma.blog.create({
-      data: body,
+      data: {
+        title: body.title,
+        content: body.content,
+        published: body.published,
+        authorId: String(userId),
+      },
     });
     return c.json(
       {
@@ -106,7 +112,7 @@ blogRouter.get("/:id", async (c) => {
 blogRouter.patch("/:id", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
   const blogId = c.req.param("id");
-  const body = await c.req.json();
+  const body: UpdateBlogType = await c.req.json();
   try {
     const blog = await prisma.blog.update({
       where: {

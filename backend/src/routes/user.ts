@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import { getPrisma } from "prisma/prismaFunctions";
+import { SignUpType, SignInType } from "@yashkharche/zod-module";
 
 import bcrypt from "bcryptjs";
 
@@ -15,7 +16,7 @@ userRouter.post("/signup", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
 
   try {
-    const body = await c.req.json();
+    const body: SignUpType = await c.req.json();
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(body.password, saltRounds);
     body.password = hashedPassword;
@@ -45,7 +46,7 @@ userRouter.post("/signin", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
 
   try {
-    const { email, password } = await c.req.json();
+    const { email, password }: SignInType = await c.req.json();
     const user = await prisma.user.findUnique({
       where: {
         email: email,
