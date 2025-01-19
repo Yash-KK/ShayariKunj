@@ -1,8 +1,7 @@
 import { Hono } from "hono";
 import { sign } from "hono/jwt";
 import { getPrisma } from "prisma/prismaFunctions";
-import { SignUpType, SignInType } from "@yashkharche/zod-module";
-
+import { SignUpType } from "@yashkharche/zod-module";
 import bcrypt from "bcryptjs";
 
 const userRouter = new Hono<{
@@ -12,42 +11,58 @@ const userRouter = new Hono<{
   };
 }>();
 
-userRouter.post("/signup", async (c) => {
+userRouter.post("/register", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
 
   try {
     const body: SignUpType = await c.req.json();
+
+    const existingUser = await prisma.author.findUnique({
+      where: {
+        email: body.email,
+      },
+    });
+    if (existingUser) {
+      return c.json(
+        {
+          status: false,
+          message: "author with email already exists!",
+        },
+        400,
+      );
+    }
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(body.password, saltRounds);
     body.password = hashedPassword;
-    const user = await prisma.user.create({
+    const user = await prisma.author.create({
       data: body,
     });
     return c.json(
       {
-        status: "success",
-        message: "user Signed Up!",
+        status: false,
+        message: "author registered!",
         user: user,
       },
       200,
     );
   } catch (error) {
+    console.log(error);
     return c.json(
       {
-        status: "fail",
-        message: "failed to Sign Up user",
+        status: false,
+        message: "failed to register author",
       },
       400,
     );
   }
 });
 
-userRouter.post("/signin", async (c) => {
+userRouter.post("/login", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
 
   try {
-    const { email, password }: SignInType = await c.req.json();
-    const user = await prisma.user.findUnique({
+    const { email, password } = await c.req.json();
+    const user = await prisma.author.findUnique({
       where: {
         email: email,
       },
@@ -55,26 +70,28 @@ userRouter.post("/signin", async (c) => {
     if (!user) {
       return c.json(
         {
-          status: "fail",
-          message: "user does not exist",
+          status: false,
+          message: "author does not exist",
         },
         400,
       );
     }
-
     const isVerified = await bcrypt.compare(password, user.password);
     if (isVerified) {
       const token = await sign(
         {
           id: user.id,
+
+          exp: Math.floor(Date.now() / 1000) + 60 * 5,
         },
+
         c.env.JWT_SECRET,
       );
 
       return c.json(
         {
-          status: "success",
-          message: "verified",
+          status: true,
+          message: "Logged In",
           token: token,
         },
         200,
@@ -82,8 +99,8 @@ userRouter.post("/signin", async (c) => {
     } else {
       return c.json(
         {
-          status: "fail",
-          message: "in correct password",
+          status: false,
+          message: "in-correct password",
         },
         401,
       );
@@ -91,8 +108,8 @@ userRouter.post("/signin", async (c) => {
   } catch (error) {
     return c.json(
       {
-        status: "fail",
-        message: "failed to SignIn ",
+        status: false,
+        message: "Failed to login",
       },
       400,
     );

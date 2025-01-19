@@ -1,10 +1,8 @@
 import { Hono } from "hono";
-import userRouter from "./routes/user";
-import blogRouter from "./routes/blog";
+import authorRouter from "./routes/author";
 
 const app = new Hono();
-app.route("/api/v1/user", userRouter);
-app.route("/api/v1/blogs", blogRouter);
+app.route("/api/v1/author", authorRouter);
 
 app.get("/", async (c) => {
   return c.text("Hello Hono!");
