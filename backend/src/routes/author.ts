@@ -80,7 +80,7 @@ userRouter.post("/login", async (c) => {
     if (isVerified) {
       const token = await sign(
         {
-          id: user.id,
+          authorId: user.id,
 
           exp: Math.floor(Date.now() / 1000) + 60 * 5,
         },
