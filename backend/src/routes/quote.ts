@@ -152,6 +152,7 @@ quoteRouter.get("/:id", async (c) => {
       },
       select: {
         text: true,
+        likes: true,
         tags: {
           select: {
             tag: {
@@ -166,6 +167,57 @@ quoteRouter.get("/:id", async (c) => {
     return c.json({
       success: true,
       quote: quote,
+    });
+  } catch (error) {
+    return c.json({
+      success: false,
+      message: "could not fetch quote",
+    });
+  }
+});
+
+quoteRouter.patch("/:id/like", async (c) => {
+  const prisma = getPrisma(c.env.DATABASE_URL);
+  const quoteId = c.req.param("id");
+  const authorId = String(c.get("decoded").authorId);
+
+  try {
+    const quote = await prisma.quote.findUnique({
+      where: {
+        id: quoteId,
+      },
+    });
+
+    if (!quote) {
+      return c.json(
+        {
+          success: false,
+          message: "quote does not exist!",
+        },
+        400,
+      );
+    }
+    if (quote.likedBy.includes(authorId)) {
+      return c.json(
+        { success: false, message: "You have already liked this quote" },
+        400,
+      );
+    }
+    const updatedQuote = await prisma.quote.update({
+      where: { id: quoteId },
+      data: {
+        likes: {
+          increment: 1,
+        },
+        likedBy: {
+          push: authorId,
+        },
+      },
+    });
+    return c.json({
+      success: true,
+      message: "quote liked!",
+      updatedQuote: updatedQuote,
     });
   } catch (error) {
     return c.json({
