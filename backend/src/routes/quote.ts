@@ -46,7 +46,6 @@ quoteRouter.post("/", async (c) => {
   const authorId = String(c.get("decoded").authorId);
   const { text, tags }: QuoteInput = await c.req.json();
   try {
-    console.log(tags, text);
     const existingTags = await prisma.tag.findMany({
       where: {
         name: {
@@ -56,8 +55,6 @@ quoteRouter.post("/", async (c) => {
     });
     const existingTagNames = existingTags.map((tag) => tag.name);
     const newTags = tags.filter((tag) => !existingTagNames.includes(tag));
-    console.log("existingTagNames: ", existingTagNames);
-    console.log("newTags: ", newTags);
 
     if (newTags.length > 0) {
       await prisma.tag.createMany({
@@ -108,10 +105,21 @@ quoteRouter.post("/", async (c) => {
 quoteRouter.get("/", async (c) => {
   const prisma = getPrisma(c.env.DATABASE_URL);
   const authorId = c.get("decoded").authorId;
+  const tags = c.req.queries("tag");
+
   try {
     const authorQuotes = await prisma.quote.findMany({
       where: {
         authorId: String(authorId),
+        tags: {
+          some: {
+            tag: {
+              name: {
+                in: tags,
+              },
+            },
+          },
+        },
       },
       include: {
         tags: {
