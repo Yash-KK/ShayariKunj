@@ -56,33 +56,3 @@ enum Role {
   USER
   ADMIN
 }
-
-/**
- * model Tag {
- * id     String   @id @default(cuid())
- * name   String   @unique
- * quotes QuoteTag[]
- * @@index([name])
- * }
- * model Quote {
- * id         String      @id @default(cuid())
- * text       String      @db.Text
- * likes      Int         @default(0)
- * createdAt  DateTime    @default(now())
- * updatedAt  DateTime    @updatedAt
- * isApproved Boolean     @default(false)
- * author     Author      @relation(fields: [authorId], references: [id])
- * authorId   String
- * tags       QuoteTag[]
- * @@index([likes])
- * @@index([createdAt])
- * }
- * model QuoteTag {
- * id       String @id @default(cuid())
- * quote    Quote  @relation(fields: [quoteId], references: [id])
- * quoteId  String
- * tag      Tag    @relation(fields: [tagId], references: [id])
- * tagId    String
- * @@unique([quoteId, tagId])
- * }
- */
