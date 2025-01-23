@@ -61,4 +61,44 @@ adminRouter.get("/quotes/pending", async (c) => {
     quotes: pendingQuotes,
   });
 });
+
+adminRouter.patch("/quotes/:id/approve", async (c) => {
+  const prisma = getPrisma(c.env.DATABASE_URL);
+  const authorId = c.get("decoded").authorId;
+  const quoteId = c.req.param("id");
+
+  try {
+    const quote = await prisma.quote.findFirst({
+      where: {
+        id: quoteId,
+        authorId: String(authorId),
+      },
+    });
+
+    if (!quote) {
+      return c.json({
+        status: false,
+        message: "Quote not found or you are not authorized to approve it",
+      }, 404);
+    }
+
+    const approvedQuote = await prisma.quote.update({
+      where: { id: quoteId },
+      data: {
+        isApproved: true,
+      },
+    });
+
+    return c.json({
+      status: true,
+      message: "Quote approved successfully",
+      approvedQuote: approvedQuote,
+    });
+  } catch (error) {
+    return c.json({
+      status: false,
+      message: "Failed to approve quote",
+    });
+  }
+});
 export default adminRouter;
