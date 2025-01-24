@@ -20,7 +20,6 @@ const Home: React.FC = () => {
     <>
       <Header />
       <main className="p-6">
-        <h2 className="text-2xl font-bold mb-4">ShayariKunj</h2>
         <div className="grid gap-4">
           {exampleShayaris.map((shayari, index) => (
             <ShayariCard
