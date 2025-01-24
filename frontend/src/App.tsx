@@ -5,15 +5,14 @@ import "./App.css";
 import Home from "./pages/Home";
 import Explore from "./pages/Explore";
 import Submit from "./pages/Submit";
+import SignUp from "./pages/SignUp";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/sign-in" element={<SignIn />} /> */}
-
         <Route path="/" element={<Home />} />
+        <Route path="/register" element={<SignUp />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/submit" element={<Submit />} />
       </Routes>

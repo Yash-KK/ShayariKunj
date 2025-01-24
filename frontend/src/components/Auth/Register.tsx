@@ -1,6 +1,6 @@
 import React from "react";
 
-const SignUpForm: React.FC = () => {
+const Register: React.FC = () => {
   return (
     <div className="flex justify-center items-center flex-col">
       <div className="mb-2 font-bold text-4xl">Create An account</div>
@@ -38,4 +38,4 @@ const SignUpForm: React.FC = () => {
     </div>
   );
 };
-export default SignUpForm;
+export default Register;

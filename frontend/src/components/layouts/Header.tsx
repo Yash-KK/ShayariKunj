@@ -1,8 +1,11 @@
 import React from "react";
 import KunjLogo from "../../assets/kunjLogo.png";
+import { useNavigate } from 'react-router-dom';
+
 import { useState } from "react";
 
 const Header: React.FC = () => {
+  const navigate = useNavigate();  
   const [showDropdown, setShowDropdown] = useState(false);
 
   const toggleDropdown = () => {
@@ -14,8 +17,10 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex items-center justify-between p-4">
         <img src={KunjLogo} alt="Logo" className="h-12 w-12 rounded-full shadow-md" />
         <nav className="flex items-center space-x-4">
-          <a href="/" className="hover:text-gray-300">Home</a>
-          <div className="relative">
+          <a onClick={()=>{
+            navigate("/register")
+          }} className="hover:text-gray-300">Login</a>
+          {/* <div className="relative">
             <button onClick={toggleDropdown} className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">Y</div>
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -29,7 +34,7 @@ const Header: React.FC = () => {
                 <a href="/signout" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">Signout</a>
               </div>
             )}
-          </div>
+          </div> */}
         </nav>
       </div>
     </header>
