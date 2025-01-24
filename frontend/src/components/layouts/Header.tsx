@@ -2,16 +2,8 @@ import React from "react";
 import KunjLogo from "../../assets/kunjLogo.png";
 import { useNavigate } from 'react-router-dom';
 
-import { useState } from "react";
-
 const Header: React.FC = () => {
   const navigate = useNavigate();  
-  const [showDropdown, setShowDropdown] = useState(false);
-
-  const toggleDropdown = () => {
-    setShowDropdown(!showDropdown);
-  };
-
   return (
     <header className="bg-gray-800 text-gray-200 shadow-md">
       <div className="container mx-auto flex items-center justify-between p-4">
