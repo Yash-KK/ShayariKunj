@@ -1,37 +1,24 @@
 import React from "react";
 import Header from "../components/layouts/Header";
-import ShayariCard from "../components/shayari/ShayariCard";
 
 const Home: React.FC = () => {
-  const exampleShayaris = [
-    {
-      text: "Zindagi ek safar hai suhana...",
-      author: "Unknown",
-      tags: ["Life", "Journey"],
-    },
-    {
-      text: "Pyaar dosti hai...",
-      author: "Bollywood",
-      tags: ["Love", "Friendship"],
-    },
-  ];
-
   return (
     <>
       <Header />
-      <main className="p-6">
-        <div className="grid gap-4">
-          {exampleShayaris.map((shayari, index) => (
-            <ShayariCard
-              key={index}
-              text={shayari.text}
-              author={shayari.author}
-              tags={shayari.tags}
-              onLike={() => console.log(`Liked: ${shayari.text}`)}
-            />
-          ))}
-        </div>
-      </main>
+      <div className="flex justify-center flex-col bg-gray-700 mt-2 mb-2 rounded-xl h-96 text-center">
+        <h1 className="text-3xl md:text-5xl font-extrabold text-yellow-400 mb-4">
+          Shayari Kunj Mein Aapka Swagat Hai!
+        </h1>
+        <p className="text-sm md:text-4xl mb-4 px-4 md:px-96">
+          Shayari ki duniya mein aapka swagat hai! Yahan har jazbaat ko shabdon
+          mein sama diya gaya hai – dosti, mohabbat, ya zindagi ke talchhat
+          lamhe, sab ke liye ek shayari hai.
+        </p>
+
+        <p className="text-sm md:text-lg mb-4">
+          Shayari Kunj – Jahan alfaaz jazbaat ban jaate hain.
+        </p>
+      </div>
     </>
   );
 };
