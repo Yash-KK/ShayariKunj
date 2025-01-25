@@ -7,13 +7,13 @@ const Header: React.FC = () => {
   return (
     <header className="flex bg-gray-800 text-gray-200 shadow-md rounded-xl h-64">
       <div className="container mx-auto flex items-center justify-between p-4">
-        <img src={KunjLogo} alt="Logo" className="shadow-md h-56" />
+        <img src={KunjLogo} alt="Logo" className="shadow-md h-56 mx-auto lg:mx-0" />
         <nav className="flex items-center space-x-4">
           <a
             onClick={() => {
               navigate("/register");
             }}
-            className="hover:text-gray-300 bg-gray-700 text-white px-3 py-1 rounded"
+            className="hidden lg:block hover:text-gray-300 bg-gray-700 text-white px-3 py-1 rounded"
           >
             Login
           </a>
